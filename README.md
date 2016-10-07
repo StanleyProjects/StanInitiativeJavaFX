@@ -3,8 +3,8 @@ StanInitiative project on JavaFX
 
 # Config
 	applicationId "stan.initiative"
-	versionCode 1606081414
-	versionName "0.01bgnrmk"
+	versionCode 1606080109
+	versionName "0.04mvp"
 
 # Build information
 ## build
