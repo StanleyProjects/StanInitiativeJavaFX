@@ -39,4 +39,4 @@ javaw -jar StanInitiative.jar
 ```
 
 ## dependencies
-[![buildToolsVersion 24.0.1](https://img.shields.io/badge/github-StanVoiceRecognition-blue.svg?style=true)](https://github.com/kepocnhh/StanVoiceRecognition)
+[![StanVoiceRecognition](https://img.shields.io/badge/github-StanVoiceRecognition-blue.svg?style=true)](https://github.com/kepocnhh/StanVoiceRecognition)

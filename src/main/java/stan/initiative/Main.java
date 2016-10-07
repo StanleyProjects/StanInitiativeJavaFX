@@ -1,11 +1,14 @@
 package stan.initiative;
 
 import javafx.application.Application;
+
+import javafx.geometry.Rectangle2D;
+
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.Modality;
 
-import stan.initiative.ui.scenes.MainScene;
+import stan.initiative.modules.main.MainScene;
 
 public class Main
     extends Application
@@ -20,7 +23,8 @@ public class Main
     {
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setAlwaysOnTop(true);
-        primaryStage.setScene(new MainScene(primaryStage));
+        Rectangle2D screen = Screen.getPrimary().getVisualBounds();
+        primaryStage.setScene(new MainScene(screen.getWidth(), screen.getHeight()));
         primaryStage.getScene().getStylesheets().add("css/StanTheme.css");
         primaryStage.show();
     }
