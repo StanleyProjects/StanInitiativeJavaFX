@@ -18,21 +18,22 @@ public class MainScene
     public MainScene(double width, double height)
     {
         super(new Pane(), width, height, Color.TRANSPARENT);
-        this.presenter = new MainPresenter(this);
-        initViews((Pane)this.getRoot());
+        getStylesheets().add("css/cudgel.css");
+        presenter = new MainPresenter(this);
+        initViews((Pane)getRoot());
         init();
     }
     private void initViews(Pane root)
     {
-        this.cudgelPane = new CudgelPane();
+        cudgelPane = new CudgelPane();
         root.getChildren().add(cudgelPane);
         configRoot(root);
     }
     public void init()
     {
-        this.cudgelPane.setLayoutX(this.getWidth()/2 - this.cudgelPane.getWidth()/2);
-        this.cudgelPane.setLayoutY(this.getHeight()/2 - this.cudgelPane.getHeight()/2);
-        System.out.println(this.getClass().getName() + " w " + this.getWidth() + " h " + this.getHeight());
+        cudgelPane.setLayoutX(getWidth()/2 - cudgelPane.getWidth()/2);
+        cudgelPane.setLayoutY(getHeight()/2 - cudgelPane.getHeight()/2);
+        System.out.println(getClass().getName() + " w " + getWidth() + " h " + getHeight());
     }
 
     private void configRoot(Pane root)

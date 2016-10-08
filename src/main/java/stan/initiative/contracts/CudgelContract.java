@@ -5,11 +5,17 @@ public interface CudgelContract
     interface View
     {
     	void moveTo(double x, double y);
+    	void showAudioLevel(int audioLevel);
+    	void showRecognition(String recognition);
+    	void voiceRecognitionOn(boolean on);
     }
 
     interface Presenter
     {
-    	void beginMove(double x, double y);
+    	void exit();
+    	void initFromFile(String filename);
+    	void beginMove(double xOffset, double yOffset);
     	void moveTo(double x, double y);
+    	void voiceRecognitionSwitch();
     }
 }

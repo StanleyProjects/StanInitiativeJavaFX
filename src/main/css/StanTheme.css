@@ -165,3 +165,14 @@
 #vr_button_stop:pressed {
     -fx-background-color: #ff5500;
 }
+
+* {
+    mygreen: #00ff00;
+}
+#cudgel_button_disable {
+    -fx-background-radius: 5em;
+    -fx-effect: dropshadow(three-pass-box, #202020, 3, 0, 0, 0);
+}
+#cudgel_button_disable {
+    -fx-background-color: mygreen;
+}
