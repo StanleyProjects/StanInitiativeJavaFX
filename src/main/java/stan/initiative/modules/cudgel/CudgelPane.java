@@ -2,11 +2,11 @@ package stan.initiative.modules.cudgel;
 
 import java.io.File;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 import stan.initiative.contracts.CudgelContract;
+import stan.initiative.units.CallbackConnector;
 
 public class CudgelPane
     extends Pane
@@ -27,16 +28,26 @@ public class CudgelPane
 
     private CudgelButton cudgelButton;
     private Button settingsButton;
+    private Button musicPlayerButton;
     private RecognitionLabel recognition;
 
     private CudgelContract.Presenter presenter;
+    private CudgelContract.Behaviour behaviour;
 
-    public CudgelPane()
+    public CudgelPane(CudgelContract.Behaviour b, CallbackConnector<CudgelContract.Callback> connector)
     {
         super();
         setStyle("-fx-background-color: null");
         setPrefSize(144,144);
-    	presenter = new CudgelPresenter(this);
+        behaviour = b;
+        connector.setCallback(new CudgelContract.Callback()
+        {
+            @Override
+            public void showMusicPlayerButton(boolean show)
+            {
+                musicPlayerButton.setVisible(show);
+            }
+        });
         initViews();
         Platform.runLater(()->
         {
@@ -49,57 +60,57 @@ public class CudgelPane
         settingsButton = new Button();
         settingsButton.setMinSize(36, 36);
         settingsButton.setId("settings_button");
+        musicPlayerButton = new Button();
+        musicPlayerButton.setMinSize(36, 36);
+        musicPlayerButton.setId("musicplayer_button");
         recognition = new RecognitionLabel();
-        getChildren().addAll(cudgelButton, settingsButton, recognition);
+        getChildren().addAll(cudgelButton, settingsButton, musicPlayerButton, recognition);
     }
     private void init()
     {
+        presenter = new CudgelPresenter(this);
         setMaxMinXY(getParent().getBoundsInParent().getMinX(),
             getParent().getBoundsInParent().getMinY(),
             getParent().getBoundsInParent().getMaxX(),
             getParent().getBoundsInParent().getMaxY());
         fileChooser = new FileChooser();
-        cudgelButton.setOnAction(new EventHandler<ActionEvent>()
+        hoverProperty().addListener((observable, oldValue, newValue)->
         {
-            @Override
-            public void handle(ActionEvent event)
+            System.out.println(getClass().getName() + " hover " + newValue);
+        });
+        cudgelButton.setOnAction((event)->
+        {
+            presenter.voiceRecognitionSwitch();
+        });
+        cudgelButton.setOnMousePressed((event)->
+        {
+            if(event.getButton() == MouseButton.PRIMARY)
             {
-                presenter.voiceRecognitionSwitch();
+                presenter.beginMove(getLayoutX() - event.getScreenX(), getLayoutY() - event.getScreenY());
+            }
+            else if(event.getButton() == MouseButton.SECONDARY)
+            {
+                presenter.exit();
+                behaviour.exit();
             }
         });
-        cudgelButton.setOnMousePressed(new EventHandler<MouseEvent>()
+        cudgelButton.setOnMouseDragged((event)->
         {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                if(event.getButton() == MouseButton.PRIMARY)
-                {
-                    presenter.beginMove(getLayoutX() - event.getScreenX(), getLayoutY() - event.getScreenY());
-                }
-                else if(event.getButton() == MouseButton.SECONDARY)
-                {
-                    presenter.exit();
-                }
-            }
-        });
-        cudgelButton.setOnMouseDragged(new EventHandler<MouseEvent>()
-        {
-            @Override
-            public void handle(MouseEvent event)
-            {
-                presenter.moveTo(event.getScreenX(), event.getScreenY());
-            }
+            presenter.moveTo(event.getScreenX(), event.getScreenY());
         });
         moveCudgelButton();
         settingsButton.setLayoutX(getWidth() - settingsButton.getWidth());
         settingsButton.setLayoutY(getHeight()/2 - settingsButton.getHeight()/2);
-        settingsButton.setOnAction(new EventHandler<ActionEvent>()
+        settingsButton.setOnAction((event)->
         {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                openConfigurationFile();
-            }
+            behaviour.openSettings();
+            //openConfigurationFile();
+        });
+        musicPlayerButton.setLayoutX(getWidth()/2 - musicPlayerButton.getWidth()/2);
+        musicPlayerButton.setLayoutY(0);
+        musicPlayerButton.setOnAction((event)->
+        {
+            behaviour.openMusicPlayer();
         });
         recognition.setLayoutY(getHeight() - recognition.getHeight());
     }
@@ -116,9 +127,6 @@ public class CudgelPane
         if(file != null && file.exists())
         {
             presenter.initFromFile(file.getAbsolutePath());
-        }
-        else
-        {
         }
     }
 

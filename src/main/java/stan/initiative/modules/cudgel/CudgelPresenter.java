@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import stan.initiative.contracts.CudgelContract;
+import stan.initiative.contracts.SettingsContract.GoogleResult;
+import stan.initiative.managers.SettingsManager;
+import stan.initiative.modules.settings.Google;
 import stan.initiative.helpers.FileHelper;
 import stan.initiative.helpers.json.JSONParser;
 
@@ -25,7 +28,8 @@ public class CudgelPresenter
 
     public CudgelPresenter(CudgelContract.View v)
     {
-        this.view = v;
+        view = v;
+        initFromConfig();
     }
 
     private ArrayList getAlternatives(HashMap responseObject)
@@ -50,7 +54,6 @@ public class CudgelPresenter
         {
             voice.stopRecognize();
         }
-        System.exit(0);
     }
 
     @Override
@@ -66,15 +69,25 @@ public class CudgelPresenter
             System.out.println(getClass().getName() + " Read file error - " + e.getMessage());
         }
     }
+    private void initFromConfig()
+    {
+        SettingsManager.getInstanse().getGoogle(new GoogleResult()
+        {
+            public void apiKey(String apiKey)
+            {
+                initVoiceRecognition(apiKey);
+            }
+        });
+    }
     private void initFromHashMap(HashMap main)
     {
-        HashMap google = (HashMap)main.get("google");
-        HashMap speechapi = (HashMap)google.get("speechapi");
-        String apikey = (String)speechapi.get("apikey");
-        if(apikey != null)
+        Object g = main.get("google");
+        if(g==null)
         {
-            initVoiceRecognition(apikey);
+            return;
         }
+        SettingsManager.getInstanse().setGoogle(new Google((HashMap)g));
+        initFromConfig();
     }
     public void initVoiceRecognition(String googleSpeechApiKey)
     {
