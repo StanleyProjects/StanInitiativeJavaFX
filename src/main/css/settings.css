@@ -1,0 +1,22 @@
+* {
+    closehover: #44ffffff;
+    closepressed: #88ffffff;
+    trans: #00000000;
+}
+
+#close_buttton {
+    -fx-background-radius: 0;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("../res/settings/close.png");
+    -fx-background-size: 24px;
+    -fx-background-color: trans;
+}
+#close_buttton:hover
+{
+    -fx-background-color: rgba(255, 255, 255, .25);
+}
+#close_buttton:pressed
+{
+    -fx-background-color: rgba(255, 255, 255, .5);
+}

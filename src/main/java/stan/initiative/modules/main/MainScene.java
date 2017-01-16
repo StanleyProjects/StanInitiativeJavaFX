@@ -30,7 +30,8 @@ public class MainScene
         super(new Pane(), width, height, Color.TRANSPARENT);
         getStylesheets().addAll(
             "css/cudgel.css",
-            "css/media/musicplayer.css");
+            "css/media/musicplayer.css",
+            "css/settings.css");
         presenter = new MainPresenter(this);
         initViews((Pane)getRoot());
         init();

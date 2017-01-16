@@ -31,6 +31,7 @@ public class SettingsTopBox
     private void initViews()
     {
         close.setMinWidth(36);
+        close.setId("close_buttton");
         close.prefHeightProperty().bind(heightProperty());
         label.prefHeightProperty().bind(this.heightProperty());
         HBox.setHgrow(label, Priority.ALWAYS);
